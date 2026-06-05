@@ -17,12 +17,27 @@ function Login() {
         }
       );
 
-      localStorage.setItem(
+    localStorage.setItem(
         "token",
         res.data.token
-      );
+    );
 
-      alert("Login Successful");
+    localStorage.setItem(
+        "role",
+        res.data.user.role
+    );
+
+    if (
+    res.data.user.role ===
+    "HOSTEL_ADMIN"
+    ) {
+    window.location.href = "/admin";
+    } else {
+    window.location.href =
+        "/student";
+    }
+
+    alert("Login Successful");
 
     } catch (err) {
       console.error(err);

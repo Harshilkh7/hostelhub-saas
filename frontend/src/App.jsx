@@ -11,6 +11,10 @@ import Hostels from "./pages/Hostels";
 import Rooms from "./pages/Rooms";
 import Leaves from "./pages/Leaves";
 import Complaints from "./pages/Complaints";
+import ProtectedRoute from "./components/ProtectedRoute";
+import StudentDashboard from "./pages/StudentDashboard";
+import MyLeaves from "./pages/MyLeaves";
+import MyComplaints from "./pages/MyComplaints";
 
 function App() {
   return (
@@ -25,11 +29,6 @@ function App() {
         <Route
           path="/register"
           element={<Register />}
-        />
-
-        <Route
-          path="/admin"
-          element={<AdminDashboard />}
         />
 
         <Route
@@ -50,6 +49,42 @@ function App() {
         <Route
           path="/complaints" 
           element={<Complaints />} 
+        />
+
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/student"
+          element={
+            <ProtectedRoute>
+              <StudentDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/my-leaves"
+          element={
+            <ProtectedRoute>
+              <MyLeaves />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/my-complaints"
+          element={
+            <ProtectedRoute>
+              <MyComplaints />
+            </ProtectedRoute>
+          }
         />
 
       </Routes>

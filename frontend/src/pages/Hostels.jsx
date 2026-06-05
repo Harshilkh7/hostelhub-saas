@@ -1,44 +1,92 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
+import Navbar from "../components/Navbar";
 
 function Hostels() {
-  const [hostels, setHostels] = useState([]);
+  const [hostels, setHostels] =
+    useState([]);
+
+  const [name, setName] =
+    useState("");
+
+  const [address, setAddress] =
+    useState("");
 
   useEffect(() => {
     fetchHostels();
   }, []);
 
   const fetchHostels = async () => {
-    try {
-      const res = await api.get("/hostels");
-      setHostels(res.data);
-    } catch (error) {
-      console.error(error);
-    }
+    const res = await api.get(
+      "/hostels"
+    );
+
+    setHostels(res.data);
   };
 
+  const createHostel =
+    async (e) => {
+      e.preventDefault();
+
+      await api.post("/hostels", {
+        name,
+        address,
+      });
+
+      setName("");
+      setAddress("");
+
+      fetchHostels();
+    };
+
   return (
-    <div>
-      <h1>Hostels</h1>
+    <>
+      <Navbar />
 
-      <table border="1">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Address</th>
-          </tr>
-        </thead>
+      <div>
+        <h1>Hostels</h1>
 
-        <tbody>
-          {hostels.map((hostel) => (
-            <tr key={hostel.id}>
-              <td>{hostel.name}</td>
-              <td>{hostel.address}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+        <form
+          onSubmit={createHostel}
+        >
+          <input
+            placeholder="Hostel Name"
+            value={name}
+            onChange={(e) =>
+              setName(
+                e.target.value
+              )
+            }
+          />
+
+          <input
+            placeholder="Address"
+            value={address}
+            onChange={(e) =>
+              setAddress(
+                e.target.value
+              )
+            }
+          />
+
+          <button type="submit">
+            Create Hostel
+          </button>
+        </form>
+
+        <hr />
+
+        {hostels.map((hostel) => (
+          <div key={hostel.id}>
+            <h3>{hostel.name}</h3>
+
+            <p>
+              {hostel.address}
+            </p>
+          </div>
+        ))}
+      </div>
+    </>
   );
 }
 

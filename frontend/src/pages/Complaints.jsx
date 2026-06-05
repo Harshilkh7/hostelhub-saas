@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
+import Navbar from "../components/Navbar";
 
 function Complaints() {
   const [complaints, setComplaints] =
@@ -22,22 +23,71 @@ function Complaints() {
     }
   };
 
+    const updateStatus = async (
+    id,
+    status
+    ) => {
+    try {
+        await api.patch(
+        `/complaints/${id}`,
+        { status }
+        );
+
+        fetchComplaints();
+
+    } catch (error) {
+        console.error(error);
+    }
+    };
+
   return (
-    <div>
-      <h1>Complaints</h1>
+    <>
+        <Navbar />
+        <div>
+        <h1>Complaints</h1>
 
-      {complaints.map((c) => (
-        <div key={c.id}>
-          <h3>{c.title}</h3>
+        {complaints.map((c) => (
+        <div
+            key={c.id}
+            style={{
+            border: "1px solid #ccc",
+            padding: "10px",
+            marginBottom: "10px",
+            }}
+        >
+            <h3>{c.title}</h3>
 
-          <p>{c.description}</p>
+            <p>{c.description}</p>
 
-          <p>{c.status}</p>
+            <p>
+            Status: {c.status}
+            </p>
 
-          <hr />
+            <button
+            onClick={() =>
+                updateStatus(
+                c.id,
+                "IN_PROGRESS"
+                )
+            }
+            >
+            In Progress
+            </button>
+
+            <button
+            onClick={() =>
+                updateStatus(
+                c.id,
+                "RESOLVED"
+                )
+            }
+            >
+            Resolve
+            </button>
         </div>
-      ))}
-    </div>
+        ))}
+        </div>
+    </>
   );
 }
 

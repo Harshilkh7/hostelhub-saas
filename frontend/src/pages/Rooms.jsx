@@ -1,48 +1,128 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
+import Navbar from "../components/Navbar";
 
 function Rooms() {
-  const [rooms, setRooms] = useState([]);
+  const [rooms, setRooms] =
+    useState([]);
+
+  const [hostelId, setHostelId] =
+    useState("");
+
+  const [roomNumber,
+    setRoomNumber] =
+    useState("");
+
+  const [floor, setFloor] =
+    useState("");
+
+  const [capacity,
+    setCapacity] =
+    useState("");
 
   useEffect(() => {
     fetchRooms();
   }, []);
 
   const fetchRooms = async () => {
-    try {
-      const res = await api.get("/rooms");
-      setRooms(res.data);
-    } catch (error) {
-      console.error(error);
-    }
+    const res =
+      await api.get("/rooms");
+
+    setRooms(res.data);
   };
 
+  const createRoom =
+    async (e) => {
+      e.preventDefault();
+
+      await api.post("/rooms", {
+        hostel_id: hostelId,
+        room_number: roomNumber,
+        floor,
+        capacity,
+      });
+
+      fetchRooms();
+    };
+
   return (
-    <div>
-      <h1>Rooms</h1>
+    <>
+      <Navbar />
 
-      <table border="1">
-        <thead>
-          <tr>
-            <th>Room</th>
-            <th>Floor</th>
-            <th>Capacity</th>
-            <th>Hostel</th>
-          </tr>
-        </thead>
+      <div>
+        <h1>Rooms</h1>
 
-        <tbody>
-          {rooms.map((room) => (
-            <tr key={room.id}>
-              <td>{room.room_number}</td>
-              <td>{room.floor}</td>
-              <td>{room.capacity}</td>
-              <td>{room.hostel_name}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+        <form
+          onSubmit={createRoom}
+        >
+          <input
+            placeholder="Hostel ID"
+            value={hostelId}
+            onChange={(e) =>
+              setHostelId(
+                e.target.value
+              )
+            }
+          />
+
+          <input
+            placeholder="Room Number"
+            value={roomNumber}
+            onChange={(e) =>
+              setRoomNumber(
+                e.target.value
+              )
+            }
+          />
+
+          <input
+            placeholder="Floor"
+            value={floor}
+            onChange={(e) =>
+              setFloor(
+                e.target.value
+              )
+            }
+          />
+
+          <input
+            placeholder="Capacity"
+            value={capacity}
+            onChange={(e) =>
+              setCapacity(
+                e.target.value
+              )
+            }
+          />
+
+          <button type="submit">
+            Create Room
+          </button>
+        </form>
+
+        <hr />
+
+        {rooms.map((room) => (
+          <div key={room.id}>
+            <h3>
+              {room.room_number}
+            </h3>
+
+            <p>
+              Capacity:
+              {" "}
+              {room.capacity}
+            </p>
+
+            <p>
+              Hostel:
+              {" "}
+              {room.hostel_name}
+            </p>
+          </div>
+        ))}
+      </div>
+    </>
   );
 }
 

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
+import Navbar from "../components/Navbar";
 
 function AdminDashboard() {
   const [stats, setStats] =
@@ -27,28 +28,68 @@ function AdminDashboard() {
   }
 
   return (
-    <div>
+  <>
+    <Navbar />
+
+    <div
+      style={{
+        padding: "20px",
+      }}
+    >
       <h1>Admin Dashboard</h1>
 
-      <div>
-        <h3>
-          Hostels: {stats.hostels}
-        </h3>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns:
+            "repeat(4, 1fr)",
+          gap: "20px",
+          marginTop: "20px",
+        }}
+      >
+        <div
+          style={{
+            border: "1px solid #ccc",
+            padding: "20px",
+          }}
+        >
+          <h3>Hostels</h3>
+          <h2>{stats.hostels}</h2>
+        </div>
 
-        <h3>
-          Rooms: {stats.rooms}
-        </h3>
+        <div
+          style={{
+            border: "1px solid #ccc",
+            padding: "20px",
+          }}
+        >
+          <h3>Rooms</h3>
+          <h2>{stats.rooms}</h2>
+        </div>
 
-        <h3>
-          Leaves: {stats.leaves}
-        </h3>
+        <div
+          style={{
+            border: "1px solid #ccc",
+            padding: "20px",
+          }}
+        >
+          <h3>Leaves</h3>
+          <h2>{stats.leaves}</h2>
+        </div>
 
-        <h3>
-          Complaints: {stats.complaints}
-        </h3>
+        <div
+          style={{
+            border: "1px solid #ccc",
+            padding: "20px",
+          }}
+        >
+          <h3>Complaints</h3>
+          <h2>{stats.complaints}</h2>
+        </div>
       </div>
     </div>
-  );
+  </>
+);
 }
 
 export default AdminDashboard;
