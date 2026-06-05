@@ -8,6 +8,7 @@ const hostelRoutes = require("./routes/hostel.routes");
 const roomRoutes = require("./routes/room.routes");
 const leaveRoutes = require("./routes/leave.routes");
 const complaintRoutes = require("./routes/complaint.routes");
+const dashboardRoutes = require("./routes/dashboard.routes");
 
 const app = express();
 
@@ -21,5 +22,6 @@ app.use("/api/hostels", hostelRoutes);
 app.use("/api/rooms", roomRoutes);
 app.use("/api/leaves", leaveRoutes);
 app.use("/api/complaints", complaintRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 module.exports = app;
