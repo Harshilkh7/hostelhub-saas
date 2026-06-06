@@ -39,11 +39,12 @@ function Leaves() {
   return (
     <>
         <Navbar />
-    <div>
+    <div className=" bg-white shadow rounded p-4 mb-4">
       <h1>Leave Requests</h1>
 
       {leaves.map((leave) => (
         <div
+            className=" bg-white shadow rounded p-4 mb-4"
             key={leave.id}
             style={{
             border: "1px solid #ccc",

@@ -38,55 +38,49 @@ function AdminDashboard() {
     >
       <h1>Admin Dashboard</h1>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns:
-            "repeat(4, 1fr)",
-          gap: "20px",
-          marginTop: "20px",
-        }}
-      >
-        <div
-          style={{
-            border: "1px solid #ccc",
-            padding: "20px",
-          }}
-        >
-          <h3>Hostels</h3>
-          <h2>{stats.hostels}</h2>
-        </div>
+    <div className="grid grid-cols-4 gap-6">
 
-        <div
-          style={{
-            border: "1px solid #ccc",
-            padding: "20px",
-          }}
-        >
-          <h3>Rooms</h3>
-          <h2>{stats.rooms}</h2>
-        </div>
+    <div className="bg-white shadow rounded p-6">
+        <p className="text-gray-500">
+        Hostels
+        </p>
 
-        <div
-          style={{
-            border: "1px solid #ccc",
-            padding: "20px",
-          }}
-        >
-          <h3>Leaves</h3>
-          <h2>{stats.leaves}</h2>
-        </div>
+        <h2 className="text-4xl font-bold">
+        {stats.hostels}
+        </h2>
+    </div>
 
-        <div
-          style={{
-            border: "1px solid #ccc",
-            padding: "20px",
-          }}
-        >
-          <h3>Complaints</h3>
-          <h2>{stats.complaints}</h2>
-        </div>
-      </div>
+    <div className="bg-white shadow rounded p-6">
+        <p className="text-gray-500">
+        Rooms
+        </p>
+
+        <h2 className="text-4xl font-bold">
+        {stats.rooms}
+        </h2>
+    </div>
+
+    <div className="bg-white shadow rounded p-6">
+        <p className="text-gray-500">
+        Leaves
+        </p>
+
+        <h2 className="text-4xl font-bold">
+        {stats.leaves}
+        </h2>
+    </div>
+
+    <div className="bg-white shadow rounded p-6">
+        <p className="text-gray-500">
+        Complaints
+        </p>
+
+        <h2 className="text-4xl font-bold">
+        {stats.complaints}
+        </h2>
+    </div>
+
+    </div>
     </div>
   </>
 );

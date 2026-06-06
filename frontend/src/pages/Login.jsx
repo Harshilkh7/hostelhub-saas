@@ -46,8 +46,13 @@ function Login() {
   };
 
   return (
-    <div>
-      <h1>Login</h1>
+    <div className="min-h-screen flex items-center justify-center bg-slate-100">
+
+  <div className="bg-white p-8 rounded shadow w-96">
+
+    <h1 className="text-2xl font-bold mb-6">
+      HostelHub Login
+    </h1>
 
       <form onSubmit={handleSubmit}>
         <input
@@ -59,6 +64,7 @@ function Login() {
         />
 
         <input
+          className="mt-4"
           type="password"
           placeholder="Password"
           value={password}
@@ -67,10 +73,11 @@ function Login() {
           }
         />
 
-        <button type="submit">
+        <button className=" bg-blue-600 text-white px-4 py-2 rounded" type="submit">
           Login
         </button>
       </form>
+    </div>
     </div>
   );
 }

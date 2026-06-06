@@ -49,13 +49,13 @@ function Rooms() {
     <>
       <Navbar />
 
-      <div>
+      <div className="p-4">
         <h1>Rooms</h1>
 
         <form
           onSubmit={createRoom}
         >
-          <input
+          <input className="c bg-white shadow rounded mb-2 mr-2 ml-2"
             placeholder="Hostel ID"
             value={hostelId}
             onChange={(e) =>
@@ -65,7 +65,7 @@ function Rooms() {
             }
           />
 
-          <input
+          <input className="c bg-white shadow rounded mb-2 mr-2 ml-2"
             placeholder="Room Number"
             value={roomNumber}
             onChange={(e) =>
@@ -75,7 +75,7 @@ function Rooms() {
             }
           />
 
-          <input
+          <input className="c bg-white shadow rounded mb-2 mr-2 ml-2"
             placeholder="Floor"
             value={floor}
             onChange={(e) =>
@@ -85,7 +85,7 @@ function Rooms() {
             }
           />
 
-          <input
+          <input className="c bg-white shadow rounded mb-2 mr-2 ml-2"
             placeholder="Capacity"
             value={capacity}
             onChange={(e) =>
@@ -95,7 +95,7 @@ function Rooms() {
             }
           />
 
-          <button type="submit">
+          <button className=" bg-blue-600 text-white px-4 py-2 rounded mb-2" type="submit">
             Create Room
           </button>
         </form>
@@ -103,7 +103,7 @@ function Rooms() {
         <hr />
 
         {rooms.map((room) => (
-          <div key={room.id}>
+          <div className=" bg-white shadow rounded p-4 mb-4" key={room.id}>
             <h3>
               {room.room_number}
             </h3>

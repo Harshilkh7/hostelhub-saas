@@ -5,7 +5,7 @@ function StudentDashboard() {
     <>
       <Navbar />
 
-      <div style={{ padding: "20px" }}>
+      <div className=" bg-white shadow rounded p-4 mb-4 font-times">
         <h1>Student Dashboard</h1>
 
         <p>

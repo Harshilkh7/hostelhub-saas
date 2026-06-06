@@ -49,7 +49,7 @@ function MyComplaints() {
   return (
     <>
       <Navbar />
-
+         <div className=" bg-white shadow rounded p-4 mb-4">
       <h1>
         My Complaints
       </h1>
@@ -59,7 +59,7 @@ function MyComplaints() {
           createComplaint
         }
       >
-        <input
+        <input className="c bg-white shadow rounded mb-2 mr-2 ml-2"
           placeholder="Title"
           value={title}
           onChange={(e) =>
@@ -69,7 +69,7 @@ function MyComplaints() {
           }
         />
 
-        <textarea
+        <textarea className="c bg-white shadow rounded mr-2 ml-2 h-5"
           placeholder="Description"
           value={description}
           onChange={(e) =>
@@ -79,7 +79,7 @@ function MyComplaints() {
           }
         />
 
-        <button type="submit">
+        <button className=" bg-blue-600 text-white px-4 py-2 rounded mb-2" type="submit">
           Submit Complaint
         </button>
       </form>
@@ -87,11 +87,12 @@ function MyComplaints() {
       <hr />
 
       {complaints.map((c) => (
-        <div key={c.id}>
+        <div className=" bg-white shadow rounded p-4 mb-4" key={c.id}>
           <h3>{c.title}</h3>
           <p>{c.status}</p>
         </div>
       ))}
+        </div>
     </>
   );
 }

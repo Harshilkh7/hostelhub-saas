@@ -1,4 +1,7 @@
-import { Link, useNavigate } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+} from "react-router-dom";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -12,57 +15,62 @@ function Navbar() {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        gap: "20px",
-        padding: "15px",
-        borderBottom:
-          "1px solid #ccc",
-      }}
-    >
-      {role === "STUDENT" ? (
-        <>
-          <Link to="/student">
-            Dashboard
-          </Link>
+    <nav className="bg-slate-900 text-white px-6 py-4 flex justify-between items-center">
 
-          <Link to="/my-leaves">
-            My Leaves
-          </Link>
+      <h1 className="font-bold text-xl">
+        HostelHub
+      </h1>
 
-          <Link to="/my-complaints">
-            My Complaints
-          </Link>
-        </>
-      ) : (
-        <>
-          <Link to="/admin">
-            Dashboard
-          </Link>
+      <div className="flex gap-6">
 
-          <Link to="/hostels">
-            Hostels
-          </Link>
+        {role === "STUDENT" ? (
+          <>
+            <Link to="/student">
+              Dashboard
+            </Link>
 
-          <Link to="/rooms">
-            Rooms
-          </Link>
+            <Link to="/my-leaves">
+              Leaves
+            </Link>
 
-          <Link to="/leaves">
-            Leaves
-          </Link>
+            <Link to="/my-complaints">
+              Complaints
+            </Link>
+          </>
+        ) : (
+          <>
+            <Link to="/admin">
+              Dashboard
+            </Link>
 
-          <Link to="/complaints">
-            Complaints
-          </Link>
-        </>
-      )}
+            <Link to="/hostels">
+              Hostels
+            </Link>
 
-      <button onClick={logout}>
+            <Link to="/rooms">
+              Rooms
+            </Link>
+
+            <Link to="/leaves">
+              Leaves
+            </Link>
+
+            <Link to="/complaints">
+              Complaints
+            </Link>
+          </>
+        )}
+
+      </div>
+
+      <button
+        onClick={logout}
+        className="bg-red-500 px-4 py-2 rounded"
+      >
         Logout
       </button>
-    </div>
+
+    </nav>
   );
 }
 

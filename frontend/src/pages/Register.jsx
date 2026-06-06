@@ -29,8 +29,13 @@ function Register() {
   };
 
   return (
-    <div>
-      <h1>Register</h1>
+    <div className="min-h-screen flex items-center justify-center bg-slate-100">
+
+  <div className="bg-white p-8 rounded shadow w-96">
+
+    <h1 className="text-2xl font-bold mb-6">
+      Register
+    </h1>
 
       <form onSubmit={handleSubmit}>
         <input
@@ -41,7 +46,7 @@ function Register() {
           }
         />
 
-        <input
+        <input className="mt-4"
           placeholder="Email"
           value={email}
           onChange={(e) =>
@@ -58,10 +63,11 @@ function Register() {
           }
         />
 
-        <button type="submit">
+        <button className=" bg-blue-600 text-white px-4 py-2 rounded" type="submit">
           Register
         </button>
       </form>
+    </div>
     </div>
   );
 }

@@ -50,13 +50,22 @@ function MyLeaves() {
   return (
     <>
       <Navbar />
-
+        <div className=" bg-white shadow rounded p-4 mb-4">
       <h1>My Leaves</h1>
 
       <form
         onSubmit={createLeave}
       >
         <input
+        className="
+            border
+            rounded
+            px-4
+            py-2
+            w-full
+            mt-2
+            mb-2
+        "
           placeholder="Reason"
           value={reason}
           onChange={(e) =>
@@ -68,6 +77,14 @@ function MyLeaves() {
 
         <input
           type="date"
+          className="
+            border
+            rounded
+            px-4
+            py-2
+            w-full
+            mb-2
+          "
           value={fromDate}
           onChange={(e) =>
             setFromDate(
@@ -78,6 +95,14 @@ function MyLeaves() {
 
         <input
           type="date"
+          className="
+            border
+            rounded
+            px-4
+            py-2
+            w-full
+            mb-2
+          "
           value={toDate}
           onChange={(e) =>
             setToDate(
@@ -86,7 +111,7 @@ function MyLeaves() {
           }
         />
 
-        <button type="submit">
+        <button className=" bg-blue-600 text-white px-4 py-2 rounded mb-2" type="submit">
           Apply Leave
         </button>
       </form>
@@ -94,11 +119,12 @@ function MyLeaves() {
       <hr />
 
       {leaves.map((leave) => (
-        <div key={leave.id}>
+        <div className=" bg-white shadow rounded p-4 mb-4"key={leave.id}>
           <p>{leave.reason}</p>
           <p>{leave.status}</p>
         </div>
       ))}
+        </div>
     </>
   );
 }

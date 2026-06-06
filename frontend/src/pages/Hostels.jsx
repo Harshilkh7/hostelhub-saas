@@ -43,13 +43,13 @@ function Hostels() {
     <>
       <Navbar />
 
-      <div>
+      <div className="p-4">
         <h1>Hostels</h1>
 
         <form
           onSubmit={createHostel}
         >
-          <input
+          <input className="c bg-white shadow rounded mb-4 mr-2 ml-2"
             placeholder="Hostel Name"
             value={name}
             onChange={(e) =>
@@ -59,7 +59,7 @@ function Hostels() {
             }
           />
 
-          <input
+          <input className="c bg-white shadow rounded mb-4 mr-2 ml-2"
             placeholder="Address"
             value={address}
             onChange={(e) =>
@@ -69,7 +69,7 @@ function Hostels() {
             }
           />
 
-          <button type="submit">
+          <button className=" bg-blue-600 text-white px-4 py-2 rounded" ype="submit">
             Create Hostel
           </button>
         </form>
@@ -77,7 +77,7 @@ function Hostels() {
         <hr />
 
         {hostels.map((hostel) => (
-          <div key={hostel.id}>
+          <div className=" bg-white shadow rounded p-4 mb-4" key={hostel.id}>
             <h3>{hostel.name}</h3>
 
             <p>

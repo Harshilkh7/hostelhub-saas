@@ -43,11 +43,12 @@ function Complaints() {
   return (
     <>
         <Navbar />
-        <div>
+        <div className=" bg-white shadow rounded p-4 mb-4">
         <h1>Complaints</h1>
 
         {complaints.map((c) => (
         <div
+            className=" bg-white shadow rounded p-4 mb-4"
             key={c.id}
             style={{
             border: "1px solid #ccc",
