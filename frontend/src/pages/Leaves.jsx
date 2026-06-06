@@ -62,7 +62,7 @@ function Leaves() {
             Status: {leave.status}
             </p>
 
-            <button
+            <button className="mr-2 bg-green-500 text-white px-4 py-2 rounded"
             onClick={() =>
                 updateStatus(
                 leave.id,
@@ -73,7 +73,7 @@ function Leaves() {
             Approve
             </button>
 
-            <button
+            <button className="bg-red-500 text-white px-4 py-2 rounded"
             onClick={() =>
                 updateStatus(
                 leave.id,
