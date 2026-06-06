@@ -33,32 +33,62 @@ function App() {
 
         <Route
           path="/hostels"
-          element={<Hostels />}
+          element={
+            <ProtectedRoute>
+              <Hostels />
+            </ProtectedRoute>
+          }
         />
 
         <Route
           path="/rooms"
-          element={<Rooms />}
+          element={
+            <ProtectedRoute>
+              <Rooms />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/rooms"
+          element={
+            <ProtectedRoute>
+              <Rooms />
+            </ProtectedRoute>
+          }
         />
 
         <Route 
           path="/leaves" 
-          element={<Leaves />} 
+          element={
+            <ProtectedRoute>
+              <Leaves />
+            </ProtectedRoute>
+          }
         />
 
         <Route
           path="/complaints" 
-          element={<Complaints />} 
+          element={
+            <ProtectedRoute>
+              <Complaints />
+            </ProtectedRoute>
+          } 
         />
 
-        <Route
+        {/* <Route
           path="/admin"
           element={
             <ProtectedRoute>
               <AdminDashboard />
             </ProtectedRoute>
           }
-        />
+        /> */}
+
+          <Route
+            path="/admin"
+            element={<h1>Admin Works</h1>}
+          />
 
         <Route
           path="/student"
