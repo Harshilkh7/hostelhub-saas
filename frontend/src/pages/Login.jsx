@@ -1,5 +1,8 @@
 import { useState } from "react";
 import api from "../services/api";
+import { useNavigate } from "react-router-dom";
+
+const navigate = useNavigate();
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -31,7 +34,7 @@ function Login() {
     res.data.user.role ===
     "HOSTEL_ADMIN"
     ) {
-    window.location.href = "/admin";
+    navigate("/admin");
     } else {
     window.location.href =
         "/student";
