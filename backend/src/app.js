@@ -23,6 +23,18 @@ app.use(
 );
 app.use(express.json());
 
+app.get("/", (req, res) => {
+  res.json({
+    message: "HostelHub API Running"
+  });
+});
+
+app.get("/health", (req, res) => {
+  res.json({
+    status: "ok"
+  });
+});
+
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/admin", adminRoutes);
