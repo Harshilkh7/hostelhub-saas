@@ -14,7 +14,7 @@ const app = express();
 
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://hostelhub-saas.vercel.app"
+  "https://hostelhub-saas.vercel.app",
 ];
 
 app.use(
