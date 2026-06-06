@@ -76,19 +76,14 @@ function App() {
           } 
         />
 
-        {/* <Route
+        <Route
           path="/admin"
           element={
             <ProtectedRoute>
               <AdminDashboard />
             </ProtectedRoute>
           }
-        /> */}
-
-          <Route
-            path="/admin"
-            element={<h1>Admin Works</h1>}
-          />
+        />
 
         <Route
           path="/student"
