@@ -262,7 +262,7 @@ http://localhost:5173
 
 ### Complaint Management
 
-![Uploading image.png…]()
+<img width="1913" height="914" alt="image" src="https://github.com/user-attachments/assets/37a12889-aa6b-4c6f-b9c0-167710593d83" />
 
 
 ---
