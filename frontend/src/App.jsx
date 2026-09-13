@@ -4,6 +4,7 @@ import Register from "./pages/Register";
 import AdminDashboard from "./pages/AdminDashboard";
 import Hostels from "./pages/Hostels";
 import Rooms from "./pages/Rooms";
+import Students from "./pages/Students";
 import Leaves from "./pages/Leaves";
 import Complaints from "./pages/Complaints";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -22,6 +23,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/hostels" element={<Protected><Hostels /></Protected>} />
         <Route path="/rooms" element={<Protected><Rooms /></Protected>} />
+        <Route path="/students" element={<Protected><Students /></Protected>} />
         <Route path="/leaves" element={<Protected><Leaves /></Protected>} />
         <Route path="/complaints" element={<Protected><Complaints /></Protected>} />
         <Route path="/admin" element={<Protected><AdminDashboard /></Protected>} />
