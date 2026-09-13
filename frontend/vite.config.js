@@ -7,4 +7,9 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  preview: {
+    allowedHosts: [
+      "hostelhub-frontend-v8bc.onrender.com",
+    ],
+  },
 });
