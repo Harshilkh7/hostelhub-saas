@@ -9,52 +9,26 @@ const roomRoutes = require("./routes/room.routes");
 const leaveRoutes = require("./routes/leave.routes");
 const complaintRoutes = require("./routes/complaint.routes");
 const dashboardRoutes = require("./routes/dashboard.routes");
+const billingRoutes = require("./routes/billing.routes");
 
 const app = express();
+const allowedOrigins = (process.env.FRONTEND_URL || "http://localhost:5173,https://hostelhub-saas.vercel.app")
+  .split(",").map((v) => v.trim()).filter(Boolean);
 
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://hostelhub-saas.vercel.app",
-];
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) callback(null, true);
+    else callback(new Error("Not allowed by CORS"));
+  },
+  credentials: true,
+}));
 
-app.use(
-  cors({
-    origin: function (
-      origin,
-      callback
-    ) {
-      if (
-        !origin ||
-        allowedOrigins.includes(
-          origin
-        )
-      ) {
-        callback(null, true);
-      } else {
-        callback(
-          new Error(
-            "Not allowed by CORS"
-          )
-        );
-      }
-    },
-    credentials: true,
-  })
-);
-
+// Stripe webhook must receive the raw request body for signature verification.
+app.use("/api/billing", billingRoutes);
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.json({
-    message: "HostelHub API Running"
-  });
-});
-
-app.get("/health", (req, res) => {
-  res.json({
-    status: "ok"
-  });
-});
+app.get("/", (req, res) => res.json({ message: "HostelHub API Running" }));
+app.get("/health", (req, res) => res.json({ status: "ok", realtime: true, billing: Boolean(process.env.STRIPE_SECRET_KEY) }));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
