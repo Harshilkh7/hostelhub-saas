@@ -1,17 +1,29 @@
 import { useEffect } from "react";
-import { connectSocket, disconnectSocket } from "../services/socket";
+import { connectSocket, disconnectSocket, getSocket } from "../services/socket";
 
 export default function RealtimeBridge() {
   useEffect(() => {
-    const socket = connectSocket();
-    if (!socket) return undefined;
-
-    const onEvent = (event) => {
-      window.dispatchEvent(new CustomEvent("hostelhub:realtime", { detail: event }));
+    let boundSocket;
+    const events = ["leave:created", "leave:updated", "complaint:created", "complaint:updated"];
+    const bind = () => {
+      const socket = connectSocket();
+      if (!socket || socket === boundSocket) return;
+      boundSocket = socket;
+      events.forEach((event) => socket.on(event, (data) => {
+        window.dispatchEvent(new CustomEvent("hostelhub:realtime", { detail: { event, data } }));
+      }));
     };
-    ["leave:created", "leave:updated", "complaint:created", "complaint:updated"].forEach((event) => socket.on(event, (data) => onEvent({ event, data })));
+
+    bind();
+    const timer = window.setInterval(bind, 1000);
+    const onStorage = () => bind();
+    window.addEventListener("storage", onStorage);
+
     return () => {
-      ["leave:created", "leave:updated", "complaint:created", "complaint:updated"].forEach((event) => socket.off(event));
+      window.clearInterval(timer);
+      window.removeEventListener("storage", onStorage);
+      const socket = getSocket();
+      if (socket) events.forEach((event) => socket.off(event));
       disconnectSocket();
     };
   }, []);
