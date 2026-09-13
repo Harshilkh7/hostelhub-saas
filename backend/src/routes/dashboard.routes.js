@@ -1,47 +1,25 @@
 const express = require("express");
 const router = express.Router();
-
 const pool = require("../config/db");
 const authenticate = require("../middleware/auth.middleware");
+const tenant = require("../middleware/tenant.middleware");
 const authorize = require("../middleware/role.middleware");
 
-router.get(
-  "/stats",
-  authenticate,
-  authorize("HOSTEL_ADMIN", "SUPER_ADMIN"),
-  async (req, res) => {
-    try {
-      const hostels = await pool.query(
-        "SELECT COUNT(*) FROM hostels"
-      );
-
-      const rooms = await pool.query(
-        "SELECT COUNT(*) FROM rooms"
-      );
-
-      const leaves = await pool.query(
-        "SELECT COUNT(*) FROM leave_requests"
-      );
-
-      const complaints = await pool.query(
-        "SELECT COUNT(*) FROM complaints"
-      );
-
-      res.json({
-        hostels: Number(hostels.rows[0].count),
-        rooms: Number(rooms.rows[0].count),
-        leaves: Number(leaves.rows[0].count),
-        complaints: Number(complaints.rows[0].count),
-      });
-
-    } catch (error) {
-      console.error(error);
-
-      res.status(500).json({
-        message: "Server Error",
-      });
-    }
-  }
-);
+router.get("/stats", authenticate, tenant, authorize("HOSTEL_ADMIN", "SUPER_ADMIN", "WARDEN"), async (req, res) => {
+  try {
+    const org = req.organizationId;
+    const [hostels, rooms, leaves, complaints] = await Promise.all([
+      pool.query("SELECT COUNT(*) FROM hostels WHERE organization_id=$1", [org]),
+      pool.query("SELECT COUNT(*) FROM rooms r JOIN hostels h ON r.hostel_id=h.id WHERE h.organization_id=$1", [org]),
+      pool.query("SELECT COUNT(*) FROM leave_requests l JOIN users u ON l.student_id=u.id WHERE u.organization_id=$1", [org]),
+      pool.query("SELECT COUNT(*) FROM complaints c JOIN users u ON c.student_id=u.id WHERE u.organization_id=$1", [org]),
+    ]);
+    res.json({
+      hostels: Number(hostels.rows[0].count), rooms: Number(rooms.rows[0].count),
+      leaves: Number(leaves.rows[0].count), complaints: Number(complaints.rows[0].count),
+      organization: req.organization,
+    });
+  } catch (error) { console.error(error); res.status(500).json({ message: "Server Error" }); }
+});
 
 module.exports = router;
