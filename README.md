@@ -1,6 +1,29 @@
 # HostelHub SaaS
 
-A full-stack hostel management platform built for managing hostel operations such as room allocation, leave requests, and complaint tracking. The platform supports role-based access control for administrators and students.
+A multi-tenant hostel operations SaaS for managing hostels, rooms, student leave requests and complaints. Organizations are isolated at the API/database layer and users are authorized by role.
+
+## Architecture
+
+React + Vite + Tailwind
+→ Node.js + Express
+→ PostgreSQL / Supabase
+
+Realtime: Socket.IO
+Billing: Stripe Subscriptions
+Authentication: JWT + RBAC
+
+## Implemented SaaS Features
+
+- Multi-tenant organizations with tenant context in JWTs
+- Tenant-isolated hostel, room, leave, complaint and dashboard queries
+- RBAC: `SUPER_ADMIN`, `HOSTEL_ADMIN`, `WARDEN`, `STUDENT`
+- Authenticated Socket.IO connections scoped to `org:<organizationId>` rooms
+- Realtime leave and complaint events
+- Stripe Checkout subscriptions with webhook synchronization
+- Free/Pro/Enterprise plan model
+- Subscription status and organization billing metadata
+- Audit-log schema for future administrative observability
+- PostgreSQL indexes for tenant and relationship lookups
 
 ## Live Demo
 
@@ -8,289 +31,200 @@ Frontend: https://hostelhub-saas.vercel.app
 
 Backend: https://hostelhub-saas.onrender.com
 
----
-
-## Features
+## Core Features
 
 ### Authentication & Authorization
 
-* JWT-based authentication
-* Secure login and registration
-* Role-Based Access Control (RBAC)
-* Protected routes on both frontend and backend
+- JWT-based authentication
+- Secure password hashing with bcrypt
+- Role-Based Access Control (RBAC)
+- Protected frontend and backend routes
+- Organization-aware JWT claims
+
+### Multi-Tenancy
+
+Each signup creates an organization and its first `HOSTEL_ADMIN` account. Every tenant-owned query is scoped using `organization_id` or a relationship back to the tenant's users/hostels.
 
 ### Admin Features
 
-* Dashboard with hostel statistics
-* Create and manage hostels
-* Create and manage rooms
-* View all leave requests
-* Approve or reject leave requests
-* View all complaints
-* Update complaint status (OPEN → IN_PROGRESS → RESOLVED)
+- Dashboard statistics
+- Create and manage hostels and rooms
+- View and process organization leave requests
+- View and update organization complaints
+- Realtime operational notifications
+- Subscription management
 
 ### Student Features
 
-* Student dashboard
-* Apply for leave
-* Track leave request status
-* Submit complaints
-* Track complaint resolution status
+- Student dashboard
+- Apply for leave
+- Track leave status
+- Submit complaints
+- Track complaint resolution status
 
----
+### Billing
+
+- Stripe subscription checkout
+- Pro and Enterprise price configuration
+- Stripe webhook signature verification
+- Subscription status synchronization into PostgreSQL
 
 ## Tech Stack
 
 ### Frontend
 
-* React
-* React Router
-* Axios
-* Tailwind CSS
-* Vite
+- React
+- React Router
+- Axios
+- Tailwind CSS
+- Vite
+- Socket.IO browser client
 
 ### Backend
 
-* Node.js
-* Express.js
-* JWT Authentication
-* bcrypt
+- Node.js
+- Express.js
+- JWT
+- bcrypt
+- Socket.IO
+- Stripe
 
 ### Database
 
-* PostgreSQL
-* Supabase
+- PostgreSQL
+- Supabase
 
 ### Deployment
 
-* Frontend: Vercel
-* Backend: Render
-* Database: Supabase
+- Frontend: Vercel
+- Backend: Render
+- Database: Supabase
 
----
+## Database Upgrade
 
-## System Architecture
+Run the migration below against the existing PostgreSQL database before deploying the new backend:
 
-Frontend (React + Vercel)
+```text
+backend/database/migrations/001_saas_upgrade.sql
+```
 
-↓
+The migration creates organizations/subscriptions/audit logs, adds organization IDs to existing users and hostels, migrates existing records to a demo organization, and adds useful indexes.
 
-Backend API (Node.js + Express + Render)
+## Environment Variables
 
-↓
+Backend `.env`:
 
-PostgreSQL Database (Supabase)
+```env
+PORT=5000
+DATABASE_URL=your_database_url
+JWT_SECRET=your_long_random_secret
+FRONTEND_URL=http://localhost:5173,https://hostelhub-saas.vercel.app
 
----
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+STRIPE_PRO_PRICE_ID=price_...
+STRIPE_ENTERPRISE_PRICE_ID=price_...
+```
 
-## Database Design
+Stripe webhook endpoint:
 
-### Users
+```text
+POST /api/billing/webhook
+```
 
-| Field    | Type   |
-| -------- | ------ |
-| id       | UUID   |
-| name     | String |
-| email    | String |
-| password | String |
-| role     | ENUM   |
+Configure the following Stripe events:
 
-### Hostels
-
-| Field   | Type   |
-| ------- | ------ |
-| id      | UUID   |
-| name    | String |
-| address | String |
-
-### Rooms
-
-| Field       | Type    |
-| ----------- | ------- |
-| id          | UUID    |
-| hostel_id   | UUID    |
-| room_number | String  |
-| floor       | Integer |
-| capacity    | Integer |
-
-### Leave Requests
-
-| Field      | Type |
-| ---------- | ---- |
-| id         | UUID |
-| student_id | UUID |
-| reason     | Text |
-| from_date  | Date |
-| to_date    | Date |
-| status     | ENUM |
-
-### Complaints
-
-| Field       | Type   |
-| ----------- | ------ |
-| id          | UUID   |
-| student_id  | UUID   |
-| title       | String |
-| description | Text   |
-| status      | ENUM   |
-
----
-
-## API Endpoints
-
-### Authentication
-
-POST /api/auth/register
-
-POST /api/auth/login
-
-### Hostels
-
-GET /api/hostels
-
-POST /api/hostels
-
-### Rooms
-
-GET /api/rooms
-
-POST /api/rooms
-
-### Leave Requests
-
-POST /api/leaves
-
-GET /api/leaves
-
-GET /api/leaves/my
-
-PATCH /api/leaves/:id
-
-### Complaints
-
-POST /api/complaints
-
-GET /api/complaints
-
-GET /api/complaints/my
-
-PATCH /api/complaints/:id
-
-### Dashboard
-
-GET /api/dashboard/stats
-
----
+- `checkout.session.completed`
+- `customer.subscription.created`
+- `customer.subscription.updated`
+- `customer.subscription.deleted`
 
 ## Local Setup
-
-### Clone Repository
 
 ```bash
 git clone https://github.com/Harshilkh7/hostelhub-saas.git
 cd hostelhub-saas
 ```
 
-### Backend Setup
+### Backend
 
 ```bash
 cd backend
-
 npm install
-```
-
-Create a `.env` file:
-
-```env
-PORT=5000
-
-DATABASE_URL=your_database_url
-
-JWT_SECRET=your_secret
-```
-
-Run backend:
-
-```bash
 npm run dev
 ```
 
-### Frontend Setup
+### Frontend
 
 ```bash
 cd frontend
-
 npm install
-
 npm run dev
 ```
 
-Frontend runs on:
+Frontend runs on `http://localhost:5173`.
 
-```text
-http://localhost:5173
-```
+## API
 
----
+### Authentication
 
-## Screenshots
+- `POST /api/auth/register`
+- `POST /api/auth/login`
 
-### Login Page
+Registration accepts `name`, `email`, `password`, and optional `organizationName`. A new organization is created for the signup.
 
-<img width="855" height="471" alt="image" src="https://github.com/user-attachments/assets/153d8fee-2897-476e-af37-c52256121b50" />
+### Hostels
 
+- `GET /api/hostels`
+- `POST /api/hostels`
 
-### Admin Dashboard
+### Rooms
 
-<img width="1901" height="877" alt="image" src="https://github.com/user-attachments/assets/408cf99a-ffb5-4c74-bfbb-ed3cf5f477eb" />
+- `GET /api/rooms`
+- `POST /api/rooms`
+- `DELETE /api/rooms/:id`
 
+### Leaves
 
-### Hostel Management
+- `POST /api/leaves`
+- `GET /api/leaves/my`
+- `GET /api/leaves`
+- `PATCH /api/leaves/:id`
 
-<img width="1898" height="915" alt="image" src="https://github.com/user-attachments/assets/b031427c-a475-4294-91cb-f22fe5bb800a" />
+### Complaints
 
+- `POST /api/complaints`
+- `GET /api/complaints/my`
+- `GET /api/complaints`
+- `PATCH /api/complaints/:id`
 
-### Room Management
+### Dashboard
 
-<img width="1919" height="901" alt="image" src="https://github.com/user-attachments/assets/26aae23b-f3d1-41cb-9bba-3f490a448c6f" />
+- `GET /api/dashboard/stats`
 
+### Billing
 
-### Leave Management
+- `GET /api/billing/subscription`
+- `POST /api/billing/checkout`
+- `POST /api/billing/webhook`
 
-<img width="1913" height="914" alt="image" src="https://github.com/user-attachments/assets/4a229b3a-b988-4396-831c-eb7c76085cd0" />
+## Realtime Events
 
+Authenticated Socket.IO clients are joined to an organization-specific room.
 
-### Complaint Management
+Events currently emitted:
 
-<img width="1913" height="914" alt="image" src="https://github.com/user-attachments/assets/37a12889-aa6b-4c6f-b9c0-167710593d83" />
+- `leave:created`
+- `leave:updated`
+- `complaint:created`
+- `complaint:updated`
 
+## Security Notes
 
----
-
-## Key Learnings
-
-* JWT Authentication and Authorization
-* Role-Based Access Control (RBAC)
-* REST API Design
-* PostgreSQL Relational Database Modeling
-* React State Management
-* Frontend and Backend Integration
-* Deployment using Vercel and Render
-* CORS Configuration and Production Debugging
-
----
-
-## Future Improvements
-
-* Room allocation system
-* Visitor management
-* Email notifications
-* Student profile management
-* Analytics dashboard
-* Multi-hostel support
-* Mobile responsive UI improvements
-
----
+- Never commit `.env` files or Stripe secrets.
+- Stripe webhook signatures are verified server-side.
+- Tenant IDs come from verified JWT claims rather than client-supplied organization IDs.
+- Room creation verifies that the referenced hostel belongs to the current organization.
 
 ## Author
 
