@@ -20,8 +20,9 @@ function Login() {
       localStorage.setItem("organizationId", data.user.organizationId);
       localStorage.setItem("organization", JSON.stringify(data.organization));
 
-      const adminRoles = ["SUPER_ADMIN", "HOSTEL_ADMIN", "WARDEN"];
-      navigate(adminRoles.includes(data.user.role) ? "/admin" : "/student");
+      if (data.user.role === "SUPER_ADMIN") navigate("/superadmin");
+      else if (["HOSTEL_ADMIN", "WARDEN"].includes(data.user.role)) navigate("/admin");
+      else navigate("/student");
     } catch (err) {
       setError(err.response?.data?.message || "Login failed");
     } finally {
