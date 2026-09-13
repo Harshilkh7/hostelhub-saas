@@ -22,7 +22,6 @@ function Navbar() {
           <>
             <Link to="/superadmin">Platform</Link>
             <Link to="/admin">Tenant Dashboard</Link>
-            <Link to="/subscription">Billing</Link>
           </>
         ) : role === "STUDENT" ? (
           <>
