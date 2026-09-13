@@ -29,6 +29,7 @@ function Navbar() {
             <Link to="/admin">Dashboard</Link>
             <Link to="/hostels">Hostels</Link>
             <Link to="/rooms">Rooms</Link>
+            <Link to="/students">Students</Link>
             <Link to="/leaves">Leaves</Link>
             <Link to="/complaints">Complaints</Link>
           </>
