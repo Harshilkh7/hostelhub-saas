@@ -18,7 +18,13 @@ function Navbar() {
         {organization && <p className="text-xs text-slate-400">{organization.name} · {organization.plan || "FREE"}</p>}
       </div>
       <div className="flex flex-wrap gap-5 items-center text-sm">
-        {role === "STUDENT" ? (
+        {role === "SUPER_ADMIN" ? (
+          <>
+            <Link to="/superadmin">Platform</Link>
+            <Link to="/admin">Tenant Dashboard</Link>
+            <Link to="/subscription">Billing</Link>
+          </>
+        ) : role === "STUDENT" ? (
           <>
             <Link to="/student">Dashboard</Link>
             <Link to="/my-leaves">Leaves</Link>
