@@ -1,6 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-
 const authRoutes = require("./routes/auth.routes");
 const userRoutes = require("./routes/user.routes");
 const adminRoutes = require("./routes/admin.routes");
@@ -11,34 +10,19 @@ const leaveRoutes = require("./routes/leave.routes");
 const complaintRoutes = require("./routes/complaint.routes");
 const dashboardRoutes = require("./routes/dashboard.routes");
 const billingRoutes = require("./routes/billing.routes");
-
 const app = express();
-const allowedOrigins = (process.env.FRONTEND_URL || "http://localhost:5173,https://hostelhub-saas.vercel.app")
-  .split(",").map((v) => v.trim()).filter(Boolean);
-
-app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) callback(null, true);
-    else callback(new Error("Not allowed by CORS"));
-  },
-  credentials: true,
-}));
-
-// Stripe webhook must receive the raw request body for signature verification.
+const allowedOrigins = (process.env.FRONTEND_URL || "http://localhost:5173,https://hostelhub-saas.vercel.app").split(",").map((v) => v.trim()).filter(Boolean);
+app.use(cors({ origin: (origin, callback) => { if (!origin || allowedOrigins.includes(origin)) callback(null, true); else callback(new Error("Not allowed by CORS")); }, credentials: true }));
+app.use((req, res, next) => {
+  if (["POST", "PUT", "PATCH", "DELETE"].includes(req.method)) {
+    const origin = req.get("origin");
+    if (origin && !allowedOrigins.includes(origin)) return res.status(403).json({ message: "Origin not allowed" });
+  }
+  next();
+});
 app.use("/api/billing", billingRoutes);
 app.use(express.json());
-
 app.get("/", (req, res) => res.json({ message: "HostelHub API Running" }));
 app.get("/health", (req, res) => res.json({ status: "ok", realtime: true, billing: Boolean(process.env.STRIPE_SECRET_KEY) }));
-
-app.use("/api/auth", authRoutes);
-app.use("/api/users", userRoutes);
-app.use("/api/admin", adminRoutes);
-app.use("/api/superadmin", superadminRoutes);
-app.use("/api/hostels", hostelRoutes);
-app.use("/api/rooms", roomRoutes);
-app.use("/api/leaves", leaveRoutes);
-app.use("/api/complaints", complaintRoutes);
-app.use("/api/dashboard", dashboardRoutes);
-
+app.use("/api/auth", authRoutes); app.use("/api/users", userRoutes); app.use("/api/admin", adminRoutes); app.use("/api/superadmin", superadminRoutes); app.use("/api/hostels", hostelRoutes); app.use("/api/rooms", roomRoutes); app.use("/api/leaves", leaveRoutes); app.use("/api/complaints", complaintRoutes); app.use("/api/dashboard", dashboardRoutes);
 module.exports = app;
