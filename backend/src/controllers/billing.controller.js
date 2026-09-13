@@ -1,7 +1,10 @@
 const Stripe = require("stripe");
 const pool = require("../config/db");
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
+const getStripe = () => {
+  if (!process.env.STRIPE_SECRET_KEY) return null;
+  return new Stripe(process.env.STRIPE_SECRET_KEY);
+};
 
 const PRICE_BY_PLAN = {
   PRO: process.env.STRIPE_PRO_PRICE_ID,
@@ -10,12 +13,13 @@ const PRICE_BY_PLAN = {
 
 const createCheckoutSession = async (req, res) => {
   try {
-    if (!process.env.STRIPE_SECRET_KEY) return res.status(503).json({ message: "Stripe is not configured" });
+    const stripe = getStripe();
+    if (!stripe) return res.status(503).json({ message: "Stripe is not configured" });
     const { plan = "PRO" } = req.body;
     const price = PRICE_BY_PLAN[plan];
     if (!price) return res.status(400).json({ message: "Unknown plan or missing Stripe price ID" });
 
-    let subscription = await pool.query("SELECT * FROM subscriptions WHERE organization_id=$1", [req.organizationId]);
+    const subscription = await pool.query("SELECT * FROM subscriptions WHERE organization_id=$1", [req.organizationId]);
     let customerId = subscription.rows[0]?.stripe_customer_id;
     if (!customerId) {
       const customer = await stripe.customers.create({
@@ -32,7 +36,7 @@ const createCheckoutSession = async (req, res) => {
       await pool.query("UPDATE organizations SET stripe_customer_id=$1 WHERE id=$2", [customerId, req.organizationId]);
     }
 
-    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+    const frontendUrl = (process.env.FRONTEND_URL || "http://localhost:5173").split(",")[0].trim();
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
       customer: customerId,
@@ -54,12 +58,16 @@ const getSubscription = async (req, res) => {
   try {
     const result = await pool.query("SELECT * FROM subscriptions WHERE organization_id=$1", [req.organizationId]);
     res.json(result.rows[0] || { plan: "FREE", status: "active" });
-  } catch (error) { console.error(error); res.status(500).json({ message: "Server Error" }); }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server Error" });
+  }
 };
 
 const handleWebhook = async (req, res) => {
   try {
-    if (!process.env.STRIPE_SECRET_KEY || !process.env.STRIPE_WEBHOOK_SECRET) return res.status(503).send("Stripe webhook not configured");
+    const stripe = getStripe();
+    if (!stripe || !process.env.STRIPE_WEBHOOK_SECRET) return res.status(503).send("Stripe webhook not configured");
     const signature = req.headers["stripe-signature"];
     const event = stripe.webhooks.constructEvent(req.body, signature, process.env.STRIPE_WEBHOOK_SECRET);
     const data = event.data.object;
