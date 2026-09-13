@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import AdminDashboard from "./pages/AdminDashboard";
+import SuperAdminDashboard from "./pages/SuperAdminDashboard";
 import Hostels from "./pages/Hostels";
 import Rooms from "./pages/Rooms";
 import Students from "./pages/Students";
@@ -21,6 +22,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/superadmin" element={<Protected><SuperAdminDashboard /></Protected>} />
         <Route path="/hostels" element={<Protected><Hostels /></Protected>} />
         <Route path="/rooms" element={<Protected><Rooms /></Protected>} />
         <Route path="/students" element={<Protected><Students /></Protected>} />
